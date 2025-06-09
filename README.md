@@ -2,15 +2,17 @@
 YOLOv8 ile nesne tespiti ve EfficientNetV2 ile sınıflandırma yapan hibrit bir trafik işareti tanıma sistemi.
 
 Proje Raporu: YOLOv8 ve EfficientNetV2 ile Hibrit Trafik İşareti Tanıma Sistemi
-Bu projede, trafik işaretlerini tespit ve sınıflandırma görevlerini iki ayrı uzmanlaşmış modelle çözen hibrit bir sistem geliştirdim. Temel amaç, YOLOv8'in nesne tespiti (object detection) konusundaki hızı ve etkinliği ile EfficientNetV2 mimarisinin sınıflandırmadaki yüksek doğruluğunu bir araya getirerek robust ve gerçek dünya senaryolarına uygun bir yapı oluşturmaktı.
+Bu projede, trafik işaretlerini tespit ve sınıflandırma görevlerini iki ayrı  model eğiterek bunları birbirine entegre ettim. Temel amaç, YOLOv8'in nesne tespiti (object detection) konusundaki hızı ve etkinliği ile EfficientNetV2 mimarisinin sınıflandırmadaki yüksek doğruluğunu bir araya getirerek robust ve gerçek dünya senaryolarına uygun bir yapı oluşturmaktı.
 
 Sınıflandırma Modülü: Zorluklar ve Stratejik Değişiklikler
 Projenin ilk fazı olan sınıflandırma modelini geliştirirken GTSRB veri setini kullandım.
 
 İlk Denemeler ve "Domain Gap" Sorunu
-İlk denemelerimde özel bir CNN mimarisi ve ardından ResNet50 ile transfer öğrenmeyi uyguladım. Her iki model de GTSRB veri setinin kendi içindeki validasyon setinde oldukça yüksek doğruluk oranlarına ulaşmasına rağmen, sisteme dışarıdan verdiğim gerçek dünya görsellerinde ciddi bir performans düşüşü yaşadılar. Bu durumun temel nedeninin klasik bir overfitting probleminden ziyade, eğitim ve test verileri arasındaki "domain farkı" (Domain Gap) olduğunu tespit ettim. GTSRB veri seti, büyük ölçüde ideal ve kontrollü koşullarda toplanmış bir "kaynak domaini" iken, gerçek dünya görselleri ise çok daha zorlu bir "hedef domaini" temsil ediyordu. Modellerin başarısızlığı, laboratuvar benzeri bir ortamda öğrendiği bilgiyi, sahadaki karmaşık koşullara adapte etme yeteneğinin kısıtlı kalmasından kaynaklanıyordu.
+İlk denemelerimde özel bir CNN mimarisi ve ardından ResNet50 ile transfer öğrenmeyi uyguladım. Her iki model de GTSRB veri setinin kendi içindeki validasyon setinde oldukça yüksek doğruluk oranlarına ulaşmasına rağmen, sisteme dışarıdan verdiğim gerçek dünya görsellerinde ciddi bir performans düşüşü yaşadılar. Bu durumun temel nedeninin klasik bir overfitting probleminden ziyade, eğitim ve test verileri arasındaki "domain farkı" (Domain Gap) olduğunu tespit ettim. GTSRB veri seti, büyük ölçüde ideal ve kontrollü koşullarda toplanmış bir "kaynak domaini" iken, gerçek dünya görselleri ise çok daha zorlu bir "hedef domaini" temsil ediyordu. 
 
 Stratejik Çözüm
+İlk olarak, eğittiğim modelde daha sert bi augmentation uyguladım fakat bu sefer model öğrenemedi.
+
 Bu domain farkını kapatmak ve modelin genelleme kabiliyetini artırmak için yaklaşımımı temelden değiştirdim:
 
 Gelişmiş Veri Artırma (Albumentations): ImageDataGenerator yerine, RandomBrightnessContrast, MotionBlur gibi daha gerçekçi ve zorlayıcı veri artırma teknikleri sunan Albumentations kütüphanesini kullandım.
